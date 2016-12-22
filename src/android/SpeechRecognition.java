@@ -82,7 +82,7 @@ public class SpeechRecognition extends CordovaPlugin {
             // init
             if (DoInit()) {
                 callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK));
-                
+
                 Handler loopHandler = new Handler(Looper.getMainLooper());
                 loopHandler.post(new Runnable() {
 
@@ -91,7 +91,7 @@ public class SpeechRecognition extends CordovaPlugin {
                         recognizer = SpeechRecognizer.createSpeechRecognizer(cordova.getActivity().getBaseContext());
                         recognizer.setRecognitionListener(new SpeechRecognitionListner());
                     }
-                    
+
                 });
             } else {
                 callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, NOT_PRESENT_MESSAGE));
@@ -134,7 +134,11 @@ public class SpeechRecognition extends CordovaPlugin {
 
             @Override
             public void run() {
-                recognizer.startListening(intent);
+                try {
+                    recognizer.startListening(intent);
+                } catch(Exception e) {
+                    
+                }
             }
 
         });
@@ -143,7 +147,7 @@ public class SpeechRecognition extends CordovaPlugin {
         res.setKeepCallback(true);
         this.speechRecognizerCallbackContext.sendPluginResult(res);
     }
-    
+
     private void stop(boolean abort) {
         this.aborted = abort;
         Handler loopHandler = new Handler(Looper.getMainLooper());
@@ -153,7 +157,7 @@ public class SpeechRecognition extends CordovaPlugin {
             public void run() {
                 recognizer.stopListening();
             }
-            
+
         });
     }
 
@@ -189,7 +193,7 @@ public class SpeechRecognition extends CordovaPlugin {
         }
         PluginResult pr = new PluginResult(PluginResult.Status.OK, event);
         pr.setKeepCallback(true);
-        this.speechRecognizerCallbackContext.sendPluginResult(pr); 
+        this.speechRecognizerCallbackContext.sendPluginResult(pr);
     }
 
     private void fireEvent(String type) {
@@ -201,7 +205,7 @@ public class SpeechRecognition extends CordovaPlugin {
         }
         PluginResult pr = new PluginResult(PluginResult.Status.OK, event);
         pr.setKeepCallback(true);
-        this.speechRecognizerCallbackContext.sendPluginResult(pr); 
+        this.speechRecognizerCallbackContext.sendPluginResult(pr);
     }
 
     private void fireErrorEvent() {
@@ -213,7 +217,7 @@ public class SpeechRecognition extends CordovaPlugin {
         }
         PluginResult pr = new PluginResult(PluginResult.Status.ERROR, event);
         pr.setKeepCallback(true);
-        this.speechRecognizerCallbackContext.sendPluginResult(pr); 
+        this.speechRecognizerCallbackContext.sendPluginResult(pr);
     }
 
     class SpeechRecognitionListner implements RecognitionListener {
@@ -288,6 +292,6 @@ public class SpeechRecognition extends CordovaPlugin {
         public void onRmsChanged(float rmsdB) {
             Log.d(LOG_TAG, "rms changed");
         }
-        
+
     }
 }
